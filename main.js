@@ -1,8 +1,10 @@
-const { Client } = require('whatsapp-web.js');
+const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 
 // Create a new client instance
-const client = new Client();
+const client = new Client({
+    authStrategy: new LocalAuth()
+});
 
 const removeAccents = (string) => {return string.normalize("NFD").replace(/[\u0300-\u036f]/g, "")}
 
@@ -17,9 +19,11 @@ client.on('qr', (qr) => {
 });
 
 // Teste de recepção
-client.on('message' , msg => {
+client.on('message' , async msg => {
   texto = removeAccents(msg.body.trim().toLowerCase());
-  console.log(texto);
+  let chat = await msg.getChat();
+  resetInactivityTimer(chat);
+  console.log(texto + "(" + msg.from + ")");
 })
 
 // Saudação / Início
@@ -128,7 +132,7 @@ client.on('message' , msg => {
     for (const sinonimo of sinonimos) {
       const regex = new RegExp(`\\b${sinonimo}\\b`, 'i');
       if (regex.test(texto)) {
-        msg.reply(`Para visualizar nosso catálogo de ${categoria} acesse:\nhttps://site.com/catalogue/${categoria}`);
+        msg.reply(`Para visualizar esse catálogo acesse:\nhttps://site.com/catalogue/${categoria}`);
       }
     }
   }
@@ -175,6 +179,29 @@ client.on('message' , msg => {
       }
     }
 })
+
+
+// Verificador de inatividade
+const userTimers = new Map();
+
+function enviarMsgDespedida(chat) {
+  chat.sendMessage(`👋 Foi um prazer falar com você! Até a próxima!`);
+  userTimers.delete(chat);
+}
+
+function resetInactivityTimer(userId) {
+  // Clear existing timer if present
+  if (userTimers.has(userId)) {
+    clearTimeout(userTimers.get(userId));
+  }
+
+  // Set new 20-second timer
+  const timer = setTimeout(() => enviarMsgDespedida(userId), 120000);
+
+  // Store the new timer
+  userTimers.set(userId, timer);
+}
+
 
 // Start your client
 client.initialize();
