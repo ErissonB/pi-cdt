@@ -16,6 +16,12 @@ client.on('qr', (qr) => {
 	qrcode.generate(qr, {small: true});
 });
 
+// Teste de recepção
+client.on('message' , msg => {
+  texto = removeAccents(msg.body.trim().toLowerCase());
+  console.log(texto);
+})
+
 // Saudação / Início
 const palavrasIniciais = [
   "oi",
@@ -63,9 +69,9 @@ Você pode:
 
 É só me dizer o que deseja! 😊`
 
-client.on('message', msg => {c
+client.on('message', msg => {
     texto = removeAccents(msg.body.trim().toLowerCase());
-    for (const palavra in palavrasIniciais) {
+    for (const palavra of palavrasIniciais) {
       const regex = new RegExp(`\\b${palavra}\\b`, 'i');
       if (regex.test(texto)) {
         msg.reply(mensagemBoasVindas);
@@ -78,7 +84,7 @@ client.on('message', msg => {c
 // Mensagem de horário
 const horarios = 'Os Nossos horários de atendimento são:\n' +
 '- Segunda a Sexta: 09:00 - 18:00\n' +
-'- Sábado: 09:00 - 14:00\n'
+'- Sábado: 09:00 - 14:00\n'+
 '- Domingo: Fechado\n';
 
 client.on('message', msg => {
@@ -88,7 +94,27 @@ client.on('message', msg => {
     }
 })
 
-// Catálogo
+// Catálogo Geral
+const mensagemCatalogo = `🛍️ Aqui está o nosso catálogo completo!
+Confira todas as opções disponíveis no nosso site:
+👉 https://site.com/catalogo
+
+Se quiser ajuda para encontrar algo específico, é só me avisar! 😊
+`
+const palavrasCatalogo = ["catálogo","catalogo","produtos","opções","opcoes","ver tudo","lista"];
+
+client.on('message' , msg => {
+    texto = removeAccents(msg.body.trim().toLowerCase());
+    for(const sinonimo of palavrasCatalogo) {
+      const regex = new RegExp(`\\b${sinonimo}\\b`, 'i');
+      if (texto == sinonimo) {
+        msg.reply(mensagemCatalogo);
+        break;
+      }
+    }
+})
+
+// Catálogo de Categoria
 const categoryMap = {
   camisas: ["camisa", "camisas", "t-shirt", "tshirts", "t-shirts", "blusa", "blusas"],
   calcas: ["calça", "calcas", "calças", "jeans", "pants", "trouser", "trousers"],
@@ -100,7 +126,7 @@ const categoryMap = {
 
 client.on('message' , msg => {
     texto = removeAccents(msg.body.trim().toLowerCase());
-    console.log(texto);
+    //console.log(texto);
     for (const [categoria, sinonimos] of Object.entries(categoryMap)) {
     for (const sinonimo of sinonimos) {
       const regex = new RegExp(`\\b${sinonimo}\\b`, 'i');
