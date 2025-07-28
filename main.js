@@ -22,6 +22,8 @@ client.on('message', msg => {
     }
 });
 
+
+// Mensagem de horário
 const horarios = 'Os Nossos horários de atendimento são:\n' +
 '- Segunda a Sexta: 09:00 - 18:00\n' +
 '- Sábado: 09:00 - 14:00\n'
@@ -29,7 +31,7 @@ const horarios = 'Os Nossos horários de atendimento são:\n' +
 
 client.on('message', msg => {
     texto = removeAccents(msg.body.trim().toLowerCase());
-    if (texto == "horario") {
+    if (texto.includes("horario")) {
         msg.reply(horarios)
     }
 })
