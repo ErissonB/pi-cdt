@@ -200,7 +200,39 @@ function resetInactivityTimer(userId) {
   userTimers.set(userId, timer);
 }
 
+// Agradecimento
+const palavrasDeAgradecimento = [
+  "obrigado",
+  "obrigada",
+  "muito obrigado",
+  "muito obrigada",
+  "valeu",
+  "agradecido",
+  "agradecida",
+  "agradeço",
+  "obg",
+  "brigado",
+  "brigada",
+  "vlw",
+  "valeu mesmo",
+  "obrigado pela ajuda",
+  "gratidão",
+  "thanks",
+  "thank you"
+];
 
+const msgAgrad = "🥰 De nada! Qualquer coisa, é só chamar!";
+
+client.on('message' , msg => {
+    texto = removeAccents(msg.body.trim().toLowerCase());
+    for(const sinonimo of palavrasDeAgradecimento) {
+      const regex = new RegExp(`\\b${sinonimo}\\b`, 'i');
+      if (texto == sinonimo) {
+        msg.reply(msgAgrad);
+        break;
+      }
+    }
+})
 // Start your client
 client.initialize();
 
