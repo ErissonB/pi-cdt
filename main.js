@@ -190,15 +190,13 @@ function enviarMsgDespedida(chat) {
 }
 
 function resetInactivityTimer(userId) {
-  // Clear existing timer if present
+  // Clear timer
   if (userTimers.has(userId)) {
     clearTimeout(userTimers.get(userId));
   }
 
-  // Set new 20-second timer
   const timer = setTimeout(() => enviarMsgDespedida(userId), 120000);
 
-  // Store the new timer
   userTimers.set(userId, timer);
 }
 
