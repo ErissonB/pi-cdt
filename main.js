@@ -26,6 +26,7 @@ client.on('message' , msg => {
 const palavrasIniciais = [
   "oi",
   "olá",
+  "ola",
   "bom dia",
   "boa tarde",
   "boa noite",
@@ -39,10 +40,6 @@ const palavrasIniciais = [
   "quero ver lançamentos",
   "como funciona?",
   "como faço para comprar?",
-  "quero atendimento",
-  "quero ajuda",
-  "pode me ajudar?",
-  "quero fazer um pedido",
   "posso comprar aqui?",
   "quero roupas femininas",
   "quero roupas masculinas",
@@ -117,8 +114,8 @@ client.on('message' , msg => {
 // Catálogo de Categoria
 const categoryMap = {
   camisas: ["camisa", "camisas", "t-shirt", "tshirts", "t-shirts", "blusa", "blusas"],
-  calcas: ["calça", "calcas", "calças", "jeans", "pants", "trouser", "trousers"],
-  acessorios: ["acessório", "acessorios", "acessórios", "óculos", "anel", "brinco", "colares", "cinto", "bolsa"],
+  calcas: ["calça", "calca", "calcas", "calças", "jeans", "pants", "trouser", "trousers"],
+  acessorios: ["acessório", "acessorio", "acessorios", "acessórios", "óculos", "anel", "brinco", "colares", "cinto", "bolsa"],
   corset: ["corset", "espartilho", "corpete"],
   body: ["body", "bodies", "bodi", "bodie"],
   cropped: ["cropped", "crop", "croppeds", "top"]
@@ -135,6 +132,48 @@ client.on('message' , msg => {
       }
     }
   }
+})
+
+// Atendente
+const palavrasParaAtendente = [
+  "falar com atendente",
+  "quero falar com alguém",
+  "quero falar com alguem",
+  "quero atendimento",
+  "me ajuda",
+  "preciso de ajuda",
+  "ajuda",
+  "atendimento",
+  "humano",
+  "posso falar com atendente?",
+  "atendente",
+  "quero suporte",
+  "suporte",
+  "preciso falar com alguém",
+  "preciso falar com alguem",
+  "tem alguém aí?",
+  "tem alguem ai?",
+  "quero falar com uma pessoa",
+  "falar com pessoa",
+  "pessoa real",
+  "chat humano",
+  "quero um atendente",
+  "me atende"
+];
+
+const mensagemAtendente = `💬 Certo!
+Vou te encaminhar para um de nossos atendentes.
+Por favor, aguarde um instante enquanto realizamos o atendimento. ⏳`;
+
+client.on('message' , msg => {
+    texto = removeAccents(msg.body.trim().toLowerCase());
+    for(const sinonimo of palavrasParaAtendente) {
+      const regex = new RegExp(`\\b${sinonimo}\\b`, 'i');
+      if (texto == sinonimo) {
+        msg.reply(mensagemAtendente);
+        break;
+      }
+    }
 })
 
 // Start your client
