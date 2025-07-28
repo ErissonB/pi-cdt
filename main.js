@@ -36,6 +36,29 @@ client.on('message', msg => {
     }
 })
 
+// Catálogo
+const categoryMap = {
+  camisas: ["camisa", "camisas", "t-shirt", "tshirts", "t-shirts", "blusa", "blusas"],
+  calcas: ["calça", "calcas", "calças", "jeans", "pants", "trouser", "trousers"],
+  acessorios: ["acessório", "acessorios", "acessórios", "óculos", "anel", "brinco", "colares", "cinto", "bolsa"],
+  corset: ["corset", "espartilho", "corpete"],
+  body: ["body", "bodies", "bodi", "bodie"],
+  cropped: ["cropped", "crop", "croppeds", "top"]
+};
+
+client.on('message' , msg => {
+    texto = removeAccents(msg.body.trim().toLowerCase());
+    console.log(texto);
+    for (const [categoria, sinonimos] of Object.entries(categoryMap)) {
+    for (const sinonimo of sinonimos) {
+      const regex = new RegExp(`\\b${sinonimo}\\b`, 'i');
+      if (regex.test(texto)) {
+        msg.reply(`Para visualizar nosso catálogo de ${categoria} acesse:\nhttps://site.com/catalogue/${categoria}`);
+      }
+    }
+  }
+})
+
 // Start your client
 client.initialize();
 
